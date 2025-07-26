@@ -501,6 +501,8 @@ HEALTH_CHECK = {
     "MEMORY_MIN": env("HEALTHCHECK_MEM_MIN", default=100),
 }
 REDIS_URL = env("REDIS_URL", default="redis://redis:6379")
+# API keys
+OPENAI_API_KEY = env("OPENAI_API_KEY", default="")
 
 # Tagging
 # ------------------------------------------------------------------------------

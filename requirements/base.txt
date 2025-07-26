@@ -44,4 +44,5 @@ pyjwt==2.9.0
 psutil==6.0.0
 django-taggit==6.1.0
 croniter==3.0.3
+openai==1.97.1
 cvss==3.2
