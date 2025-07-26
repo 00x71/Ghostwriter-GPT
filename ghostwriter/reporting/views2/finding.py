@@ -116,6 +116,49 @@ class FindingCreate(RoleBasedAccessControlMixin, View):
         return redirect("reporting:finding_update", pk=obj.id)
 
 
+class AIFindingCreate(RoleBasedAccessControlMixin, View):
+    """Create a new finding using an LLM like ChatGPT."""
+
+    def test_func(self):
+        return Finding.user_can_create(self.request.user)
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You do not have the necessary permission to create new findings.")
+        return redirect("reporting:findings")
+
+    def post(self, request) -> HttpResponse:
+        prompt = request.POST.get("prompt", "").strip()
+        if not prompt:
+            messages.error(request, "You must provide a prompt for AI generation.")
+            return redirect("reporting:findings")
+
+        try:
+            import openai
+            from django.conf import settings
+
+            openai.api_key = settings.OPENAI_API_KEY
+            response = openai.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You generate security findings for penetration test reports."},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            content = response.choices[0].message.content.strip()
+        except Exception as exc:  # pragma: no cover - network calls not tested
+            messages.error(request, f"LLM request failed: {exc}")
+            return redirect("reporting:findings")
+
+        obj = Finding(
+            title=prompt[:100],
+            description=content,
+            extra_fields=ExtraFieldSpec.initial_json(Finding),
+        )
+        obj.save()
+        messages.success(request, "AI generated finding created", extra_tags="alert-success")
+        return redirect("reporting:finding_update", pk=obj.id)
+
+
 class ConvertFinding(RoleBasedAccessControlMixin, SingleObjectMixin, View):
     """
     Create a copy of an individual :model:`reporting.ReportFindingLink` and prepare
