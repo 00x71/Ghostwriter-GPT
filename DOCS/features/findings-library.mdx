@@ -5,6 +5,17 @@ description: "Managing finding templates with the Finding Library"
 
 The Findings Library lives at `/reporting/findings/`. The library is where users can view and edit finding templates for use in reports. Adding a finding to the library makes it available to all users. The library is intended to be the "source of truth" for your team when it comes to templates.
 
+## AI Integration
+
+Ghostwriter now includes a basic integration with large language models. If you
+set the `OPENAI_API_KEY` environment variable, you can run the management command
+`generate_ai_finding` to create finding text using an LLM. The command will
+prompt the model with your text and optionally create a new finding record.
+
+```bash
+python manage.py generate_ai_finding "Prompt describing the finding" --create
+```
+
 <Note>
 Make sure everyone is aware that editing a finding in the library *changes it for everyone*. Edits for a specific project/report should be made after the finding is added to the report. Then edit the report's "local" copy.
 </Note>

@@ -1,7 +1,7 @@
 
 import logging
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
@@ -17,6 +17,7 @@ from ghostwriter.commandcenter.views import CollabModelUpdate
 from ghostwriter.reporting.filters import FindingFilter
 from ghostwriter.reporting.forms import FindingNoteForm
 from ghostwriter.reporting.models import Finding, FindingNote, ReportFindingLink
+from ghostwriter.modules.llm import generate_finding
 
 logger = logging.getLogger(__name__)
 
@@ -284,3 +285,23 @@ class FindingNoteUpdate(RoleBasedAccessControlMixin, UpdateView):
     def get_success_url(self):
         messages.success(self.request, "Successfully updated the note.", extra_tags="alert-success")
         return reverse("reporting:finding_detail", kwargs={"pk": self.get_object().finding.pk})
+
+class GenerateFindingAI(RoleBasedAccessControlMixin, View):
+    """Return generated finding text from an LLM."""
+
+    def test_func(self):
+        return verify_user_is_privileged(self.request.user)
+
+    def handle_no_permission(self):
+        return JsonResponse({"error": "Permission denied"}, status=403)
+
+    def post(self, request, *args, **kwargs):
+        prompt = request.POST.get("prompt", "").strip()
+        if not prompt:
+            return JsonResponse({"error": "No prompt provided"}, status=400)
+        try:
+            text = generate_finding(prompt)
+        except Exception as exc:
+            logger.exception("LLM generation failed: %s", exc)
+            return JsonResponse({"error": str(exc)}, status=500)
+        return JsonResponse({"text": text})

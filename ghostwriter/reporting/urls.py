@@ -111,6 +111,7 @@ urlpatterns += [
 urlpatterns += [
     path("findings/<int:pk>", ghostwriter.reporting.views2.finding.FindingDetailView.as_view(), name="finding_detail"),
     path("findings/create/", ghostwriter.reporting.views2.finding.FindingCreate.as_view(), name="finding_create"),
+    path("findings/generate_ai/", ghostwriter.reporting.views2.finding.GenerateFindingAI.as_view(), name="finding_generate_ai"),
     path("findings/update/<int:pk>", ghostwriter.reporting.views2.finding.FindingUpdate.as_view(), name="finding_update"),
     path("findings/delete/<int:pk>", ghostwriter.reporting.views2.finding.FindingDelete.as_view(), name="finding_delete"),
     path(

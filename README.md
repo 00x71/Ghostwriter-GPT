@@ -16,6 +16,12 @@ and organizing the infrastructure and domains utilized during assessments. With 
 includes comprehensive collaborative writing features and customizable report templates, allowing teams to produce polished
 deliverables with minimal manual effort.
 
+## AI-Assisted Findings
+
+Set the `OPENAI_API_KEY` environment variable to enable AI-assisted finding
+generation. Run `python manage.py generate_ai_finding "<prompt>" --create` to
+create a new finding populated by an LLM.
+
 Ghostwriter comes equipped with "enterprise-level" features, such as role-based access controls, single sign-on authentication,
 and multi-factor authentication. Additionally, it integrates with tools like Mythic C2 and Cobalt Strike to enable automatic
 activity logging. These capabilities make Ghostwriter an ideal centralized and collaborative environment for red teams and
