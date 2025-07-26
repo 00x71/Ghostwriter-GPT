@@ -16,6 +16,7 @@ from ghostwriter.commandcenter.models import (
     ReportConfiguration,
     SlackConfiguration,
     VirusTotalConfiguration,
+    LLMConfiguration,
     EXTRA_FIELD_TYPES,
 )
 from ghostwriter.singleton.admin import SingletonModelAdmin
@@ -25,6 +26,7 @@ admin.site.register(CompanyInformation, SingletonModelAdmin)
 admin.site.register(NamecheapConfiguration, SingletonModelAdmin)
 admin.site.register(SlackConfiguration, SingletonModelAdmin)
 admin.site.register(VirusTotalConfiguration, SingletonModelAdmin)
+admin.site.register(LLMConfiguration, SingletonModelAdmin)
 admin.site.register(GeneralConfiguration, SingletonModelAdmin)
 
 

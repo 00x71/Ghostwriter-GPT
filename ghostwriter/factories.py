@@ -881,6 +881,15 @@ class VirusTotalConfigurationFactory(factory.django.DjangoModelFactory):
     sleep_time = 20
 
 
+class LLMConfigurationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "commandcenter.LLMConfiguration"
+
+    enable = Faker("boolean")
+    api_key = Faker("credit_card_number")
+    model_name = "gpt-3.5-turbo"
+
+
 class GeneralConfigurationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "commandcenter.GeneralConfiguration"

@@ -320,6 +320,33 @@ class VirusTotalConfiguration(SingletonModel):
         return sanitize(self.api_key)
 
 
+class LLMConfiguration(SingletonModel):
+    enable = models.BooleanField(
+        default=False,
+        help_text="Enable to allow AI-based finding generation",
+    )
+    api_key = models.CharField(
+        max_length=255,
+        default="LLM API Key",
+        help_text="API key for the LLM provider",
+    )
+    model_name = models.CharField(
+        max_length=255,
+        default="gpt-3.5-turbo",
+        help_text="Model name to use for generation",
+    )
+
+    def __str__(self):
+        return "LLM Configuration"
+
+    class Meta:
+        verbose_name = "LLM Configuration"
+
+    @property
+    def sanitized_api_key(self):
+        return sanitize(self.api_key)
+
+
 class GeneralConfiguration(SingletonModel):
     default_timezone = TimeZoneField(
         "Default Timezone",

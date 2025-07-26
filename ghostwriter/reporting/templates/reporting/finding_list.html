@@ -32,6 +32,14 @@
     {% csrf_token %}
     <button role="button" class="btn btn-info col-2 icon add-icon">Create Finding</button>
   </form>
+  {% get_solo "commandcenter.LLMConfiguration" as llm_config %}
+  {% if llm_config.enable %}
+    <form action="{% url 'reporting:finding_ai_create' %}" method="POST" class="mt-2" style="display:flex;gap:4px">
+      {% csrf_token %}
+      <input type="text" name="prompt" class="form-control col-8" placeholder="Describe finding" />
+      <button type="submit" class="btn btn-success col-2 icon add-icon">AI Create</button>
+    </form>
+  {% endif %}
   <a id="resetSortBtn" class="btn btn-secondary col-2 icon sync-icon" role="button">Reset Sort</a>
 
   {% if filter.qs|length == 0 %}

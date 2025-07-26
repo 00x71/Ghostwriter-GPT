@@ -14,6 +14,7 @@ from ghostwriter.factories import (
     ReportConfigurationFactory,
     SlackConfigurationFactory,
     VirusTotalConfigurationFactory,
+    LLMConfigurationFactory,
 )
 
 logging.disable(logging.CRITICAL)
@@ -258,6 +259,43 @@ class VirusTotalConfigurationTests(TestCase):
 
     def test_sanitized_api_key_property(self):
         entry = self.VirusTotalConfiguration.get_solo()
+        length = len(entry.api_key)
+        replacement = "\u2717" * (length - 8)
+        sanitized = entry.sanitized_api_key
+        self.assertNotEqual(entry.api_key, sanitized)
+        self.assertIn(replacement, sanitized)
+
+
+class LLMConfigurationTests(TestCase):
+    """Collection of tests for :model:`commandcenter.LLMConfiguration`."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.LLMConfiguration = LLMConfigurationFactory._meta.model
+
+    def test_crud_finding(self):
+        entry = LLMConfigurationFactory(enable=False)
+
+        self.assertEqual(entry.enable, False)
+        self.assertEqual(entry.pk, 1)
+
+        entry.enable = True
+        entry.save()
+        entry.refresh_from_db()
+        self.assertEqual(entry.enable, True)
+
+        entry.delete()
+        self.assertFalse(self.LLMConfiguration.objects.all().exists())
+
+    def test_get_solo_method(self):
+        try:
+            entry = self.LLMConfiguration.get_solo()
+            self.assertEqual(entry.pk, 1)
+        except Exception:
+            self.fail("LLMConfiguration model `get_solo` method failed unexpectedly!")
+
+    def test_sanitized_api_key_property(self):
+        entry = self.LLMConfiguration.get_solo()
         length = len(entry.api_key)
         replacement = "\u2717" * (length - 8)
         sanitized = entry.sanitized_api_key
